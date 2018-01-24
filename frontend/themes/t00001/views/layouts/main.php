@@ -89,7 +89,9 @@ use common\helpers\ThemeHelper;
     </div>
     
     <?= $content ?>	
-    	
+
+
+
     <!--footer_df-->
     <div class="footer_df">
         <div class="ft_news_wrap">
@@ -156,15 +158,37 @@ use common\helpers\ThemeHelper;
     </div>
 </div>
 <div class="masking" style="width: 100%;height: 100%;background-color: #000000;opacity: 0.3;position:fixed;top: 0;left: 0;"></div>
-<div class="login-box" style="width:440px;height:335px;background-color: #fff;border:2px solid #ffbb3c;border-radius: 12px;top: 50%;position:fixed;left: 50%;margin-top:-168px ;margin-left:-220px;">
-    <div class="login-title" style="text-align:center;padding-top: 30px">
-        <img class="login-logo" style="width:154px;" src="<?= SiteHelper::getImgSrc($this->context->mainDatas['cmsSite']['logo']) ?>">
-        <i class="iconfont" style="position:absolute;right: 10px;top: 15px">&#xe625;</i>
-    </div>
-    <div class="login-form">
-        
-    </div>
+<!--<div class="login-box" style="width:440px;height:335px;background-color: #fff;border:2px solid #ffbb3c;border-radius: 12px;top: 50%;position:fixed;left: 50%;margin-top:-168px ;margin-left:-220px;">-->
+<!--    <div class="login-title" style="text-align:center;padding-top: 30px">-->
+<!--        <img class="login-logo" style="width:154px;" src="--><?//= SiteHelper::getImgSrc($this->context->mainDatas['cmsSite']['logo']) ?><!--">-->
+<!--        <i class="iconfont" style="position:absolute;right: 10px;top: 15px">&#xe625;</i>-->
+<!--    </div>-->
+<!--    <div class="login-form">-->
+<!--        -->
+<!--    </div>-->
+<!--</div>-->
+
+<div class="frame_signIn  frame_bx " style="display:none;">
+    <i class="iconfont delete_df btn_df">&#xe625;</i>
+    <img class="logo_df" src="../themes/t00001/dist/img/frame_logo.png">
+    <form class="frame_form">
+        <div class="input_bx">
+            <i class="ico_account"></i>
+            <input class="writeIn" type="text" placeholder="用户名">
+        </div>
+        <div class="input_bx">
+            <i class="ico_password"></i>
+            <input class="writeIn" type="text" placeholder="登录密码">
+        </div>
+
+        <p class="btn_row">
+            <a class="btn_df" href="#">立即注册</a>|<a class="btn_df" href="#">忘记密码</a>
+        </p>
+
+        <a class="btn_df frame_btn noneSelect">登录</a>
+    </form>
 </div>
+
 <?php $this->endBody() ?>
 </body>
 </html>
