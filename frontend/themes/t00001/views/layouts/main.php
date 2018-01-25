@@ -190,7 +190,7 @@ use common\helpers\ThemeHelper;
 </div>
 
 <!--frame_register_message-->
-<div class="frame_register_message  frame_bx " >
+<div class="frame_register_message  frame_bx "  >
     <i class="iconfont delete_df btn_df noneSelect">&#xe625;</i>
     <img class="logo_df" src="../themes/t00001/dist/img/frame_logo.png">
     <form class="frame_form">
@@ -238,6 +238,87 @@ use common\helpers\ThemeHelper;
             <input class="writeIn" type="password" placeholder="确认密码">
         </div>
         <a class="btn_df frame_btn noneSelect">完成</a>
+    </form>
+</div>
+
+<!--frame_forget-->
+<div class="frame_forget  frame_bx " style="display:none;">
+    <i class="iconfont delete_df btn_df noneSelect">&#xe625;</i>
+    <img class="logo_df" src="../themes/t00001/dist/img/frame_logo.png">
+    <form class="frame_form">
+        <div class="input_bx">
+            <i class="ico_number"></i>
+            <input class="writeIn" type="text" placeholder="手机号">
+        </div>
+
+        <div class="verify_code">
+            <div class="input_bx">
+                <i class="ico_code"></i>
+                <input class="writeIn" type="text" placeholder="验证码">
+            </div>
+            <button class="getVerify_btn btn_df" type="button" >获取短信验证码</button>
+        </div>
+        <a class="btn_df frame_btn noneSelect">重置密码</a>
+    </form>
+</div>
+
+
+<!--frame_repair-->
+<div class="frame_repair  frame_bx " style="display:none;">
+    <i class="iconfont delete_df btn_df noneSelect">&#xe625;</i>
+    <img class="logo_df" src="../themes/t00001/dist/img/frame_logo.png">
+    <form class="frame_form">
+        <div class="input_bx">
+            <i class="ico_password"></i>
+            <input class="writeIn" type="password" placeholder="原密码">
+        </div>
+        <div class="input_bx">
+            <i class="ico_password"></i>
+            <input class="writeIn" type="password" placeholder="新密码">
+        </div>
+        <div class="input_bx again_input">
+            <i class="ico_password"></i>
+            <input class="writeIn" type="password" placeholder="确认密码">
+        </div>
+        <a class="btn_df frame_btn noneSelect">确认修改</a>
+    </form>
+</div>
+
+<!--frame_reset-->
+<div class="frame_reset  frame_bx "  style="display:none;">
+    <i class="iconfont delete_df btn_df noneSelect">&#xe625;</i>
+    <img class="logo_df" src="../themes/t00001/dist/img/frame_logo.png">
+    <form class="frame_form">
+        <div class="input_bx">
+            <i class="ico_password"></i>
+            <input class="writeIn" type="password" placeholder="重置密码">
+        </div>
+        <div class="input_bx again_input">
+            <i class="ico_password"></i>
+            <input class="writeIn" type="password" placeholder="确认密码">
+        </div>
+        <a class="btn_df frame_btn noneSelect">登录</a>
+    </form>
+</div>
+
+<!--frame_bindPhone-->
+<div class="frame_bindPhone  frame_bx " style="display:none;" >
+    <i class="iconfont delete_df btn_df noneSelect">&#xe625;</i>
+    <img class="logo_df" src="../themes/t00001/dist/img/frame_logo.png">
+    <form class="frame_form">
+        <div class="input_bx">
+            <i class="ico_number"></i>
+            <input class="writeIn" type="text" placeholder="原手机号">
+        </div>
+        <div class="input_bx ">
+            <i class="ico_password"></i>
+            <input class="writeIn" type="password" placeholder="登录密码">
+        </div>
+        <div class="input_bx margin_B20" >
+            <i class="ico_number"></i>
+            <input class="writeIn" type="text" placeholder="新手机号">
+        </div>
+        <a class="btn_df frame_btn noneSelect">登录</a>
     </form>
 </div>
 <?php $this->endBody() ?>
