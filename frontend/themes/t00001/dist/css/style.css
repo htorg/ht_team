@@ -1775,6 +1775,26 @@
     height:14px;
     background:url(../img/ico_password.png) center top;
 }
+.frame_bx .input_bx .ico_number{
+    position:absolute;
+    left:14px;
+    top:50%;
+    margin-top:-7px;
+    display:inline-block;
+    width:14px;
+    height:14px;
+    background:url(../img/ico_number.png) center top;
+}
+.frame_bx .input_bx .ico_code{
+    position:absolute;
+    left:14px;
+    top:50%;
+    margin-top:-7px;
+    display:inline-block;
+    width:12px;
+    height:14px;
+    background:url(../img/ico_password.png) center top;
+}
 .frame_bx .input_bx::-webkit-input-placeholder {
     font-size:14px;
     color: #808080;
@@ -1830,7 +1850,62 @@
 .frame_signIn .logo_df{
     margin: 44px 0 24px;
 }
+/*frame_register_message*/
+.frame_register_message .logo_df{
+    margin: 44px 0 20px;
+}
+.frame_register_message .verify_code{
+    padding-right:144px;
+    position:relative;
+    padding-bottom:2px;
 
+}
+.frame_register_message .verify_code .getVerify_btn{
+    display:block;
+    width:134px;
+    position:absolute;
+    right:0;
+    top:0;
+    height:38px;
+    line-height:38px;
+    text-align:center;
+    border:solid 1px #fbaa1c;
+    border-radius:20px;
+    color:#808080;
+}
+.frame_register_message .check_bx{
+    margin-bottom:20px;
+    height:12px;
+    line-height:12px;
+}
+#sigIn_protocol{
+    display:none;
+}
+#sigIn_protocol:checked~.sigIn_protocol_label{
+    background:gray;
+}
+.frame_register_message .sigIn_protocol_label{
+    vertical-align: middle;
+    display:inline-block;
+    width:11px;
+    height:11px;
+    background:url(../img/ico_checkOff.png) left top;
+}
+.frame_register_message .check_bx .words_df{
+    font-size:12px;
+    color:#808080;
+}
+.frame_register_message .check_bx .words_df .btn_df{
+    font-size:12px;
+    color:#808080;
+}
+/*frame_register_account*/
+.frame_register_account .logo_df{
+    margin: 30px 0 26px;
+}
+.frame_register_account .again_input{
+    margin-bottom:20px;
+}
 @media screen and (max-width:450px){
     .frame_bx{width:90%;left:5%;margin-left:0;}
 }
