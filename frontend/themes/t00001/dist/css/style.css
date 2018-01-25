@@ -1906,6 +1906,7 @@
 .frame_register_account .again_input{
     margin-bottom:20px;
 }
+
 @media screen and (max-width:450px){
     .frame_bx{width:90%;left:5%;margin-left:0;}
 }
