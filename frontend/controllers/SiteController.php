@@ -86,6 +86,11 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
+    public function actionCenter()
+    {
+        return $this->render('center');
+    }
+
     /**
      * Displays contact page.
      *
