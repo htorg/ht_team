@@ -178,7 +178,7 @@ class UserController extends Controller
     }
 
     public function actionCenter(){
-
+        $this->layout='center';
         return $this->render('center');
     }
 

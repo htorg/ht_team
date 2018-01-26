@@ -44,23 +44,14 @@ class Controller extends \yii\web\Controller {
             $this->hostName = Yii::$app->request->hostInfo;
             $this->siteCore = $siteCore;
 			$this->siteId = $siteCore->getSiteId();
-			$this->langId = $siteCore->getSiteLangId();	
-			/* 
-            $themeId = $siteCore->getSiteThemeId();
-            $themeCode = ThemeHelper::getThemeCodeById($themeId);
-            
-            if(!ThemeHelper::setThemeByCode($themeCode)){
-            	return false;
-            } */
+			$this->langId = $siteCore->getSiteLangId();
 			Yii::$app->cache->flush();
 			$this->themeId = $siteCore->getSiteThemeId($this->siteId);
-			  //$themeId=yii::$app->request->get('theme');
 			$themeCode = ThemeHelper::getThemeCodeById($this->themeId);
 			if (!ThemeHelper::setThemeByCode($themeCode) ){
 					return false;
 			}
 			$this->mainDatas=CacheHelper::getArrayList('siteinfo2'.$this->siteCore->getSiteInfo()['cmsSite']['site_id'], $this->siteCore->getSiteInfo());
-			//var_dump($this->mainDatas);
 			return true;
         } else {
             return false;

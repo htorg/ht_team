@@ -2,7 +2,7 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 ?>
-<?php $form = ActiveForm::begin(['class'=>'frame_form','action'=>Url::to(['user/resume-create']),
+<?php $form = ActiveForm::begin(['id'=>'register_form','class'=>'frame_form','action'=>Url::to(['user/resume-create']),
     'fieldConfig'=>[
         'template'=> "{input}{hint}\n{error}",
         'inputOptions'=>['class'=>'input_ful'],
@@ -15,13 +15,13 @@ use yii\helpers\Url;
         <img class="logo_df" src="<?= $url; ?>/img/frame_logo.png">
             <div class="input_bx">
                 <i class="ico_number"></i>
-                <input class="writeIn" type="text" placeholder="手机号">
+                <input class="writeIn" id="cellphone" name="username" type="text" placeholder="手机号">
             </div>
 
             <div class="verify_code">
                 <div class="input_bx">
                     <i class="ico_code"></i>
-                    <input class="writeIn" type="text" placeholder="验证码">
+                    <input class="writeIn" name="verifyCode" type="text" placeholder="验证码">
                 </div>
                 <button class="getVerify_btn btn_df" type="button" >获取短信验证码</button>
             </div>
@@ -41,7 +41,7 @@ use yii\helpers\Url;
         <img class="logo_df" src="<?php echo Yii::$app->request->baseUrl; ?>/themes/t00001/dist/img/frame_logo.png">
             <div class="input_bx">
                 <i class="ico_account"></i>
-                <input class="writeIn" type="text" placeholder="昵称">
+                <input class="writeIn" name="nickname" type="text" placeholder="昵称">
             </div>
 
             <div class="input_bx">
