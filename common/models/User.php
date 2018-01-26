@@ -6,7 +6,6 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use common\helpers\UtilHelper;
 
 /**
  * User model
@@ -26,18 +25,15 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
-    
-    public $avatar_file;
+
     public $newpwd1;
     public $newpwd2;
-
-
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return '{{%admin_user}}';
     }
 
     /**
@@ -58,41 +54,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
-            [['id'],'integer'],
-            ['username', 'filter', 'filter' => 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
-            
-            [['avatar'], 'string', 'max' => 255],
-            [['avatar_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024*1024*2],
-            
-            [['newpwd1','newpwd2'], 'string', 'min' => 6],
-            ['newpwd1', 'compare', 'compareAttribute' => 'newpwd2']
         ];
-    }
-    
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'newpwd1' => \Yii::t('app', 'Newpwd1'),
-            'newpwd2' => \Yii::t('app', 'Newpwd2'),
-            'avatar' => Yii::t('app', 'Headnode'),
-            'avatar_file' => Yii::t('app', 'Headnode'),
-        ];
-    }
-
-
-    public function uploadAvatar($site_id,$dirName='user/images')
-    {
-        if (empty($this->avatar_file))
-        {
-            return false;
-        }
-        return UtilHelper::upload($this->avatar_file, $site_id, $dirName);
     }
 
     /**
@@ -224,5 +186,16 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+    public static function findByPhone($phone)
+    {
+        return static::findOne(['phone' => $phone, 'status' => self::STATUS_ACTIVE]);
+    }
+    public function resetPassword($usename,$password){
+        $user=$this->findByUsername($usename);
+        $user->setPassword($password);
+        $user->removePasswordResetToken();
+
+        return $user->save() ? $user : null;
     }
 }

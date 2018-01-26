@@ -40,7 +40,8 @@ class CacheHelper{
     {
     	$data = self::getCache($key);
     	if (empty($data))
-    	{    		
+    	{
+    		
     		$data = self::setArrayList($key, $array, $time);
     	}
     

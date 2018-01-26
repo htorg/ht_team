@@ -16,7 +16,9 @@ class m170406_075252_create_friend_link_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
             'site_url' => $this->string(),
-            'logo' => $this->string(),
+            'logo' => $this->string()->notNull(),
+            'created_at'=>$this->integer()->notNull(),
+            'updated_at'=>$this->integer()->notNull(),
         ]);
     }
 

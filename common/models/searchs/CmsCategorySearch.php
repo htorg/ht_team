@@ -1,7 +1,6 @@
 <?php
 
 namespace common\models\searchs;
-
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -18,8 +17,8 @@ class CmsCategorySearch extends CmsCategory
     public function rules()
     {
         return [
-            [['id', 'lang_id', 'site_id', 'parent_id', 'status','sort_val','created_at'], 'integer'],
-            [['name'], 'safe'],
+            [['id','parent_id', 'status','sort_val','created_at'], 'integer'],
+            [['name','type'], 'safe'],
         ];
     }
 
@@ -50,7 +49,9 @@ class CmsCategorySearch extends CmsCategory
         ]);
 
         $this->load($params);
-
+        if (isset($params['type'])){
+            $this->type=$params['type'];
+        }
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
@@ -60,15 +61,15 @@ class CmsCategorySearch extends CmsCategory
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'lang_id' => $this->lang_id,
-            'site_id' => $this->site_id,
             'parent_id' => $this->parent_id,
             'status' => $this->status,
+            'type'=>$this->type
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
-        
-        $query->orderBy('sort_val asc,created_at asc');
+        if(!isset($_GET['sort'])){
+        	$query->orderBy('sort_val asc,created_at desc');
+        }
 
         return $dataProvider;
     }

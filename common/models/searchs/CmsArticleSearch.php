@@ -18,7 +18,7 @@ class CmsArticleSearch extends CmsArticle
     public function rules()
     {
         return [
-            [['id', 'lang_id', 'site_id', 'category_id', 'status','sort_val','created_at'], 'integer'],
+            [['id','category_id', 'status','sort_val','created_at','type'], 'integer'],
             [['name'], 'safe'],
         ];
     }
@@ -60,14 +60,26 @@ class CmsArticleSearch extends CmsArticle
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'lang_id' => $this->lang_id,
-            'site_id' => $this->site_id,
             'category_id' => $this->category_id,
             'status' => $this->status,
+        	'type'=>$this->type	
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
+        if(!isset($_GET['sort'])){
+        	$query->orderBy('created_at desc');
+        }
 
         return $dataProvider;
+    }
+
+    /**
+     * Returns static class instance, which can be used to obtain meta information.
+     * @param bool $refresh whether to re-create static instance even, if it is already cached.
+     * @return static class instance.
+     */
+    public static function instance($refresh = false)
+    {
+        // TODO: Implement instance() method.
     }
 }

@@ -4,6 +4,7 @@ namespace backend\components;
 use common\helpers\ThemeHelper;
 use Yii;
 use backend\helpers\SiteHelper;
+use yii\helpers\Url;
 
 /**
  * Created by PhpStorm.
@@ -15,21 +16,16 @@ use backend\helpers\SiteHelper;
 class Controller extends \yii\web\Controller {
     public function beforeAction($action)
     {
-        
         if (parent::beforeAction($action)) {
-        	header('Content-Type: text/html; charset=UTF-8') ;
-			\Yii::$app->cache->flush();
-            if (!ThemeHelper::setThemeByCode('adminlte')) {
-                return false;
-            }
-
-            \Yii::$app->language = 'zh-CN';
-
-            \Yii::$app->params['site_id'] = SiteHelper::getSiteId();
-            \Yii::$app->params['lang_id'] = SiteHelper::getLangId();
-
-            ThemeHelper::checkAccess();
-            return true;
+            date_default_timezone_set('Asia/Shanghai');
+            header('Content-Type: text/html; charset=utf-8');
+			if(Yii::$app->user->isGuest){;
+				// 没有登录,登录,登录后,返回
+			    Yii::$app->user->setReturnUrl(Yii::$app->request->getUrl());  // 设置返回的url,登录后原路返回
+			    Yii::$app->user->loginRequired();
+			    Yii::$app->end();
+			};
+			return true;
         } else {
             return false;
         }

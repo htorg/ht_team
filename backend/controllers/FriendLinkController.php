@@ -2,17 +2,16 @@
 
 namespace backend\controllers;
 
+use common\helpers\DataHelper;
 use Yii;
 use common\models\FriendLink;
 use common\models\searchs\FriendLinkSearch;
-//use yii\web\Controller;
 use backend\components\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\UploadedFile;
 use common\helpers\UtilHelper;
-//use common\helpers\DataHelper;
+
 
 /**
  * FriendLinkController implements the CRUD actions for FriendLink model.
@@ -44,11 +43,7 @@ class FriendLinkController extends Controller
      */
     public function actionIndex()
     {
-    	$site_id = \Yii::$app->params['site_id'];
-    	$lang_id = \Yii::$app->params['lang_id'];
         $searchModel = new FriendLinkSearch();
-        $searchModel->site_id = $site_id;
-        $searchModel->lang_id = $lang_id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -75,37 +70,23 @@ class FriendLinkController extends Controller
      */
     public function actionCreate()
     {
-    	$lang_id = \Yii::$app->params['lang_id'];
-    	$site_id = \Yii::$app->params['site_id'];
-        $model = new Friendlink();     
+        $model = new Friendlink();
+        $model->created_at=time();
+        $model->updated_at=time();
         if (Yii::$app->request->isPost) {
-
-            //var_dump(Yii::$app->request->post());die;
-            //var_dump($_POST);die;
-            
-            $friendlink = Yii::$app->request->post('FriendLink');
-            $model->site_id =$site_id;
-            $model->lang_id = $lang_id;
-            $model->site_url = $friendlink['site_url'];
-            $model->name = $friendlink['name'];
-         	$model->type=$friendlink['type'];
-
-            $model->logo = UploadedFile::getInstance($model, 'logo');
-                 //var_dump($model);die;
-            if (($file = $model->uploadLogo($site_id))!=false) {
+            $model->upload_logo = UploadedFile::getInstance($model, 'upload_logo');
+            if (($file = $model->uploadLogo())!=false) {
                 $model->logo = $file['src'];
             }
-
-             //var_dump($model->logo);die;
-            /*if ($model->load(Yii::$app->request->post()) && $model->save()){
+            if ($model->load(Yii::$app->request->post()) && $model->save()){
                 return $this->redirect(['index']);
-            }*/
-
-            if ($model->validate() && $model->save()){
-                return $this->redirect(['index']);
+            }else{
+                var_dump($model->getErrors());die();
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
             }
         }
-        
         return $this->render('create', [
                 'model' => $model,
             ]);
@@ -120,45 +101,21 @@ class FriendLinkController extends Controller
      */
     public function actionUpdate($id)
     {
-    	$lang_id = \Yii::$app->params['lang_id'];
-    	$site_id = \Yii::$app->params['site_id'];
         $model = $this->findModel($id);
-
+        $model->updated_at=time();
         if (Yii::$app->request->isPost) {
-
-            //var_dump(Yii::$app->request->post());die;
-            //var_dump($_POST);die;
-            $friendlink = Yii::$app->request->post('FriendLink');
-            $model->site_id = $site_id;
-            $model->lang_id = $lang_id;
-            $model->site_url = $friendlink['site_url'];
-            $model->name = $friendlink['name'];
-            $model->type=$friendlink['type'];
-
-            $model->logo = UploadedFile::getInstance($model, 'logo');
-                 //var_dump($model);die;
-            if (($file = $model->uploadLogo($site_id))!=false) {
+            $model->upload_logo = UploadedFile::getInstance($model, 'upload_logo');
+            if (($file = $model->uploadLogo())!=false) {
+                UtilHelper::DeleteImg($model->logo);
                 $model->logo = $file['src'];
             }
-
-             //var_dump($model->logo);die;
-            /*if ($model->load(Yii::$app->request->post()) && $model->save()){
+            if ($model->load(Yii::$app->request->post()) && $model->save()){
                 return $this->redirect(['index']);
-            }*/
-
-            if ($model->validate() && $model->save()){
-                return $this->redirect(['index']);
+            }else{
+                var_dump($model->getErrors());die();
             }
+
         }
-
-        /*if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }*/
-
         return $this->render('create', [
                 'model' => $model,
             ]);

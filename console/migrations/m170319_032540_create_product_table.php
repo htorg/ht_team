@@ -12,95 +12,50 @@ class m170319_032540_create_product_table extends Migration
      */
     public function up()
     {
-        $this->createTable('cms_product_config', [
+        $this->createTable('cms_product', [
             'id' => $this->primaryKey(),
-            'lang_id' => $this->integer()->notNull(),
-            'site_id' => $this->integer()->notNull(),
-            'product_field' => $this->text()->notNull(),
-            'product_order_btn' => $this->string(40)->null(),
-            'product_detail_title' => $this->string(60)->null(),
-            'product_detail_more_title' => $this->string(60)->null(),
-            'top_banner' => $this->string()->null(),
-            'top_banner_name' => $this->string()->null(),
-            'top_banner_desc' => $this->string()->null(),
-            'homepage_name' => $this->string()->null(),
-            'homepage_desc' => $this->string()->null(),
-            'more_btn_name' => $this->string()->null(),
-            'inquiry_title' => $this->string()->null(),
-            'inquiry_field' => $this->text()->notNull(),
-            'inquiry_email' => $this->string()->notNull(),
-            'inquiry_submit' => $this->string()->null(),
-            'blank_error' => $this->string()->null(),
-            'mobile_error' => $this->string()->null(),
-            'email_error' => $this->string()->null(),
-            'status'        => $this->smallInteger()->notNull()->defaultValue(10),
-            'created_at'    => $this->integer(),
-            'updated_at'    => $this->integer(),
-        ]);
-        $this->createTable('cms_product_category', [
-            'id' => $this->primaryKey(),
-            'lang_id'       => $this->integer()->notNull(),
-            'site_id' => $this->integer()->notNull(),
-            'parent_id' => $this->integer()->defaultValue(0)->notNull(),
-
-            'name'          => $this->string()->notNull(),
-            'description'   => $this->string()->notNull(),
-            'image_main' => $this->string(),
-            'image_node' => $this->string(),
-
-            'sort_val'      => $this->integer()->notNull()->defaultValue(100),
-            'status'        => $this->smallInteger()->notNull()->defaultValue(10),
-            'created_at'    => $this->integer(),
-            'updated_at'    => $this->integer(),
+            'type'=>$this->integer()->notNull(),
+            'meta_keywords'=>$this->string(255)->null(),
+            'meta_description'=>$this->string(255)->null(),
+            'banner' => $this->string(255)->notNull(),
+            'banner_title' => $this->string(20)->null(),
+            'banner_subtitle' => $this->string(20)->null(),
+            'main_title' => $this->string(20)->null(),
+            'second_title' => $this->string(20)->null(),
+            'product_detail'=>$this->text()->null(),
+            'created_at'    => $this->integer()->notNull(),
+            'updated_at'    => $this->integer()->notNull(),
         ]);
         $this->createTable('cms_product_info', [
             'id' => $this->primaryKey(),
-            'lang_id'       => $this->integer()->notNull(),
-            'site_id' => $this->integer()->notNull(),
-            'category_id'       => $this->integer()->notNull(),
-            'product_name' => $this->string()->notNull(),
-            'product_info' => $this->text()->notNull(),
-            'product_cover' => $this->string()->notNull(),
-            'product_content' => $this->text()->notNull(),
-            'status'        => $this->smallInteger()->notNull()->defaultValue(10),
-            'recommend'     => $this->smallInteger()->notNull()->defaultValue(0),
-            'sort_val'      => $this->integer()->notNull()->defaultValue(100),
-            'created_at'    => $this->integer(),
-            'updated_at'    => $this->integer(),
+            'product_id' => $this->integer()->notNull(),
+            'main_image'=> $this->string(255)->notNull(),
+            'main_name'=> $this->string(20)->notNull(),
+            'main_description'  => $this->text()->notNull(),
+            'address'=> $this->string(20),
+            'property_area'=>$this->string(20),
+            'available_area'=>$this->string(50),
+            'property_properties'=>$this->string(20),
+            'price'=>$this->string(20),
+            'node_image'=> $this->string(255),
+            'node_name'          => $this->string(50),
+            'node_description'   => $this->text(),
+            'created_at'    => $this->integer()->notNull(),
+            'updated_at'    => $this->integer()->notNull(),
         ]);
-        $this->createTable('cms_product_sku', [
+        $this->createTable('cms_product_pic',[
             'id' => $this->primaryKey(),
-            'lang_id'       => $this->integer()->notNull(),
-            'site_id' => $this->integer()->notNull(),
-            'product_id'       => $this->integer()->notNull(),
-            'name' => $this->string()->notNull(),
-            'value' => $this->string()->notNull(),
-            'pic' => $this->string()->notNull(),
-            'status'        => $this->smallInteger()->notNull()->defaultValue(10),
-            'sort_val'      => $this->integer()->notNull()->defaultValue(100),
-            'created_at'    => $this->integer(),
-            'updated_at'    => $this->integer(),
-        ]);
-        $this->createTable('cms_product_pic', [
-            'id' => $this->primaryKey(),
-            'lang_id'       => $this->integer()->notNull(),
-            'site_id' => $this->integer()->notNull(),
-            'product_id'       => $this->integer()->notNull(),
-            'sku_id' => $this->integer()->null(),
-            'image' => $this->string()->notNull(),
-            'status'        => $this->smallInteger()->notNull()->defaultValue(10),
-            'sort_val'      => $this->integer()->notNull()->defaultValue(100),
-            'created_at'    => $this->integer(),
-            'updated_at'    => $this->integer(),
-        ]);
-        $this->createTable('cms_product_inquiry', [
-            'id' => $this->primaryKey(),
-            'lang_id'       => $this->integer()->notNull(),
-            'site_id' => $this->integer()->notNull(),
-            'product_id'       => $this->integer()->notNull(),
-            'inquiry_detail' => $this->text()->notNull(),
-            'created_at'    => $this->integer(),
-            'updated_at'    => $this->integer(),
+            'product_id' => $this->integer()->notNull(),
+            'sub_banner'=>$this->string(255),
+            'info_img1'=>$this->string(255)->null(),
+            'info_title1'=>$this->string(20)->null(),
+            'info_img2'=>$this->string(255)->null(),
+            'info_title2'=>$this->string(20)->null(),
+            'info_img3'=>$this->string(255)->null(),
+            'info_title3'=>$this->string(20)->null(),
+            'show_pics'=>$this->text()->null(),
+            'created_at'    => $this->integer()->notNull(),
+            'updated_at'    => $this->integer()->notNull(),
         ]);
     }
 
@@ -109,11 +64,8 @@ class m170319_032540_create_product_table extends Migration
      */
     public function down()
     {
-        $this->dropTable('cms_product_config');
-        $this->dropTable('cms_product_category');
+        $this->dropTable('cms_product');
         $this->dropTable('cms_product_info');
-        $this->dropTable('cms_product_sku');
         $this->dropTable('cms_product_pic');
-        $this->dropTable('cms_product_inquiry');
     }
 }

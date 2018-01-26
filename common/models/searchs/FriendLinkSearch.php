@@ -8,7 +8,7 @@ use yii\data\ActiveDataProvider;
 use common\models\FriendLink;
 
 /**
- * FriendLinkSearch represents the model behind the search form about `common\models\FriendLink`.
+ * FriendLinkSearch represents the model behind the search form of `common\models\FriendLink`.
  */
 class FriendLinkSearch extends FriendLink
 {
@@ -18,7 +18,7 @@ class FriendLinkSearch extends FriendLink
     public function rules()
     {
         return [
-            [['id', 'lang_id', 'site_id', 'created_at', 'updated_at','type'], 'integer'],
+            [['id', 'created_at', 'updated_at'], 'integer'],
             [['name', 'site_url', 'logo'], 'safe'],
         ];
     }
@@ -60,11 +60,8 @@ class FriendLinkSearch extends FriendLink
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'lang_id' => $this->lang_id,
-            'site_id' => $this->site_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-        	'type'=>$this->type,	
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

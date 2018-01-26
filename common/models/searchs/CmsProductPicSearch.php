@@ -8,7 +8,7 @@ use yii\data\ActiveDataProvider;
 use common\models\CmsProductPic;
 
 /**
- * CmsProductPicSearch represents the model behind the search form about `common\models\CmsProductPic`.
+ * CmsProductPicSearch represents the model behind the search form of `common\models\CmsProductPic`.
  */
 class CmsProductPicSearch extends CmsProductPic
 {
@@ -18,8 +18,8 @@ class CmsProductPicSearch extends CmsProductPic
     public function rules()
     {
         return [
-            [['id', 'lang_id', 'site_id', 'product_id', 'sku_id', 'status', 'sort_val', 'created_at', 'updated_at'], 'integer'],
-            [['image'], 'safe'],
+            [['id', 'product_id'], 'integer'],
+            [['sub_banner', 'info_img1', 'info_title1', 'info_img2', 'info_title2', 'info_img3', 'info_title3', 'show_pics'], 'safe'],
         ];
     }
 
@@ -60,17 +60,17 @@ class CmsProductPicSearch extends CmsProductPic
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'lang_id' => $this->lang_id,
-            'site_id' => $this->site_id,
             'product_id' => $this->product_id,
-            'sku_id' => $this->sku_id,
-            'status' => $this->status,
-            'sort_val' => $this->sort_val,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'image', $this->image]);
+        $query->andFilterWhere(['like', 'sub_banner', $this->sub_banner])
+            ->andFilterWhere(['like', 'info_img1', $this->info_img1])
+            ->andFilterWhere(['like', 'info_title1', $this->info_title1])
+            ->andFilterWhere(['like', 'info_img2', $this->info_img2])
+            ->andFilterWhere(['like', 'info_title2', $this->info_title2])
+            ->andFilterWhere(['like', 'info_img3', $this->info_img3])
+            ->andFilterWhere(['like', 'info_title3', $this->info_title3])
+            ->andFilterWhere(['like', 'show_pics', $this->show_pics]);
 
         return $dataProvider;
     }

@@ -2,18 +2,15 @@
 
 namespace backend\controllers;
 
+use common\helpers\UtilHelper;
+use common\models\CmsProduct;
 use Yii;
 use common\models\CmsProductPic;
-use backend\components\Controller;
+use common\models\searchs\CmsProductPicSearch;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use common\models\CmsAlbum;
-use common\helpers\DataHelper;
-use common\models\UploadForm;
+use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
-use common\helpers\UtilHelper;
-use yii\filters\AccessControl;
-use common\models\CmsProductSku;
-use common\helpers\CacheHelper;
 
 /**
  * CmsProductPicController implements the CRUD actions for CmsProductPic model.
@@ -26,14 +23,10 @@ class CmsProductPicController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['index', 'delete'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -45,45 +38,151 @@ class CmsProductPicController extends Controller
      */
     public function actionIndex()
     {
-        $site_id = \Yii::$app->params['site_id'];
-        $lang_id = \Yii::$app->params['lang_id'];
-        if (!isset($_REQUEST['sku_id']))
+        if (!isset($_REQUEST['product_id']))
         {
             throw new NotFoundHttpException('404');
         }
-        $sku = CmsProductSku::findOne($_REQUEST['sku_id']);
-        if (!is_object($sku))
+        $product = CmsProduct::findOne($_REQUEST['product_id']);
+        if (!is_object($product))
         {
             throw new NotFoundHttpException('404');
         }
-        
-        $model = new UploadForm();
-        if (Yii::$app->request->isPost) {
-            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
-            if (($files = $model->uploadMultiple($site_id, 'product/images')) != false) {
-                foreach ($files as $f)
-                {
-                    $pic = new CmsProductPic();
-                    $pic->site_id = $site_id;
-                    $pic->lang_id = $lang_id;
-                    $pic->product_id = $sku->product_id;
-                    $pic->sku_id = $sku->id;
-                    $pic->image = $f['src'];
-                    $pic->save();
-                }
-                CacheHelper::deleteCache('product_'.$sku->product_id);
-                return $this->redirect(['cms-product-pic/index','sku_id'=>$sku->id]);
-            }
-        }
-        
-        $pics = CmsProductPic::find()->where(['sku_id'=>$_REQUEST['sku_id']])->all();
-        $statusMap = DataHelper::getGeneralStatus();
+        $searchModel = new CmsProductPicSearch();
+        $searchModel->product_id = $_REQUEST['product_id'];
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'pics' => $pics,
-            'statusMap' => $statusMap,
-            'sku' => $sku,
-            'model' => $model
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Displays a single CmsProductPic model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Creates a new CmsProductPic model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new CmsProductPic();
+        if (!isset($_REQUEST['product_id']))
+        {
+            throw new NotFoundHttpException('404');
+        }
+        $product = CmsProduct::findOne($_REQUEST['product_id']);
+        if (!is_object($product))
+        {
+            throw new NotFoundHttpException('404');
+        }
+        $model->product_id=$_REQUEST['product_id'];
+        $model->created_at=time();
+        $model->updated_at=time();
+        if (Yii::$app->request->isPost){
+            $model->upload_banner=UploadedFile::getInstance($model,'upload_banner');
+            if (($file=$model->uploadBanner())!=false){
+                $model->sub_banner=$file['src'];
+            }
+            $model->upload_image1=UploadedFile::getInstance($model,'upload_image1');
+            if (($file=$model->uploadImage1())!=false){
+                $model->info_img1=$file['src'];
+            }
+            $model->upload_image2=UploadedFile::getInstance($model,'upload_image2');
+            if (($file=$model->uploadImage2())!=false){
+                $model->info_img2=$file['src'];
+            }
+            $model->upload_image3=UploadedFile::getInstance($model,'upload_image3');
+            if (($file=$model->uploadImage3())!=false){
+                $model->info_img3=$file['src'];
+            }
+            $model->upload_show_pics=UploadedFile::getInstances($model,'upload_show_pics');
+            $files=$model->uploadImageShowPics();
+            if ($files!=false){
+                $model->show_pics=json_encode($files);
+            }
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['index', 'product_id' => $model->product_id]);
+            }else{
+                var_dump($model->getErrors());
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Updates an existing CmsProductPic model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+        $model->updated_at=time();
+        $pics=json_decode($model->show_pics);
+        //var_dump($pics);die();
+        $srcs=array();
+        if (!empty($pics)){
+            foreach ($pics as $val){
+                $srcs['srcs'][]=\Yii::getAlias('@web').$val->src;
+                $srcs['titles'][]=$val->name;
+            }
+        }
+        if (Yii::$app->request->isPost){
+            $model->upload_banner=UploadedFile::getInstance($model,'upload_banner');
+            if (($file=$model->uploadBanner())!=false){
+                UtilHelper::DeleteImg($model->sub_banner);
+                $model->sub_banner=$file['src'];
+            }
+            $model->upload_image1=UploadedFile::getInstance($model,'upload_image1');
+            if (($file=$model->uploadImage1())!=false){
+                UtilHelper::DeleteImg($model->info_img1);
+                $model->info_img1=$file['src'];
+            }
+            $model->upload_image2=UploadedFile::getInstance($model,'upload_image2');
+            if (($file=$model->uploadImage2())!=false){
+                UtilHelper::DeleteImg($model->info_img2);
+                $model->info_img2=$file['src'];
+            }
+            $model->upload_image3=UploadedFile::getInstance($model,'upload_image3');
+            if (($file=$model->uploadImage3())!=false){
+                UtilHelper::DeleteImg($model->info_img3);
+                $model->info_img3=$file['src'];
+            }
+            $model->upload_show_pics=UploadedFile::getInstances($model,'upload_show_pics');
+            $files=$model->uploadImageShowPics();
+            if ($files!=false){
+                if (!empty($pics)){
+                    foreach ($pics as $val){
+                        UtilHelper::DeleteImg($val->src);
+                    }
+                }
+                $model->show_pics=json_encode($files);
+            }
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['index', 'product_id' => $model->product_id]);
+            }else{
+                var_dump($model->getErrors());
+            }
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+            'srcs'=>$srcs
         ]);
     }
 
@@ -93,25 +192,11 @@ class CmsProductPicController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete()
+    public function actionDelete($id)
     {
-        if (!isset($_REQUEST['id']))
-        {
-            return json_encode(['c'=>-1,'msg'=>\Yii::t('app', 'Error Params')]);
-        }
-        $model = $this->findModel($_REQUEST['id']);
-        if (is_object($model))
-        {
-            UtilHelper::DeleteImg($model->image);
-            CacheHelper::deleteCache('product_'.$model->product_id);
-            
-            $model->delete();
-            return json_encode(['c'=>0]);
-        }
-        else
-        {
-            return json_encode(['c'=>-1,'msg'=>\Yii::t('app', 'Error Params')]);
-        }
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
     }
 
     /**
@@ -125,8 +210,8 @@ class CmsProductPicController extends Controller
     {
         if (($model = CmsProductPic::findOne($id)) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 }

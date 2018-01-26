@@ -1,60 +1,36 @@
 <?php
 namespace frontend\components;
 
-use common\core\SiteCore;
-use common\helpers\SiteHelper;
 use common\helpers\ThemeHelper;
-use Yii;
-use yii\helpers\ArrayHelper;
-use common\helpers\NavHelper;
-use common\models\CmsSite;
-use yii\web\NotFoundHttpException;
-use yii\web\NotAcceptableHttpException;
-use common\helpers\LangHelper;
-use common\helpers\CacheHelper;
+use common\models\CmsCategory;
 use common\models\CmsPageContact;
-use common\helpers\CaseCategoryHelper;
-use common\helpers\AlbumHelper;
-use common\helpers\ServiceHelper;
-use common\helpers\ShareHelper;
-use common\helpers\InitHelper;
+use common\models\CmsProduct;
+use common\models\HomepageConfig;
+use Yii;
+use backend\helpers\SiteHelper;
+use yii\helpers\Url;
 
-/**
- * Created by PhpStorm.
- * User: teavoid
- * Date: 17/2/6
- * Time: 16:39
- */
 
 class Controller extends \yii\web\Controller {
-    public $hostName;
-    public $siteCore;
-	public $siteId;
-	public $langId;
-	public $themeId;
-	public $mainDatas;
-
+    public $products;
+    public $category_list;
+    public $record;
+    public $contact;
     public function beforeAction($action)
     {
-        if (parent::beforeAction($action)) {
-
-            $siteCore = new SiteCore();
-            $siteCore->init();
-	
-            $this->hostName = Yii::$app->request->hostInfo;
-            $this->siteCore = $siteCore;
-			$this->siteId = $siteCore->getSiteId();
-			$this->langId = $siteCore->getSiteLangId();
-			Yii::$app->cache->flush();
-			$this->themeId = $siteCore->getSiteThemeId($this->siteId);
-			$themeCode = ThemeHelper::getThemeCodeById($this->themeId);
-			if (!ThemeHelper::setThemeByCode($themeCode) ){
-					return false;
-			}
-			$this->mainDatas=CacheHelper::getArrayList('siteinfo2'.$this->siteCore->getSiteInfo()['cmsSite']['site_id'], $this->siteCore->getSiteInfo());
-			return true;
+        date_default_timezone_set('Asia/Shanghai');
+        header('Content-Type: text/html; charset=utf-8');
+        return true;
+      /*  if (parent::beforeAction($action)) {
+            $this->products=CmsProduct::find()->select(['id','type'])->distinct()->asArray()->all();
+            $this->category_list=CmsCategory::find()->where(['type'=>CmsCategory::TYPE_NEWS])->all();
+            $this->record=HomepageConfig::find()->one();
+            $this->contact=CmsPageContact::find()->where(['type'=>CmsPageContact::TYPE_COMPANY])->one();
+            $this->getView()->title='天安数码城';
+            //var_dump($this->contact->address);die();
+            return true;
         } else {
             return false;
-        }
+        }*/
     }
 }

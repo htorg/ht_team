@@ -44,13 +44,9 @@ class CmsBannerPicController extends Controller
     {
         $searchModel = new CmsBannerPicSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
-        $statusMap = DataHelper::getGeneralStatus();
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'statusMap' => $statusMap
         ]);
     }
 
@@ -71,29 +67,33 @@ class CmsBannerPicController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($banner_id)
+    public function actionCreate()
     {
-        $site_id = \Yii::$app->params['site_id'];
-        $lang_id = \Yii::$app->params['lang_id'];
         $model = new CmsBannerPic();
-        $model->banner_id = $banner_id;
+        $model->pos = 'home';
         $model->sort_val = 10;
-        $statusMap = DataHelper::getGeneralStatus();
-
+        $model->created_at=time();
+        $model->updated_at=time();
         if (Yii::$app->request->isPost) {
             $model->image_file = UploadedFile::getInstance($model, 'image_file');
-            if (($file = $model->uploadImage($site_id))!=false) {
+            if (($file = $model->uploadImage())!=false) {
                 $model->image = $file['src'];
             }
-            
-            if ($model->load(Yii::$app->request->post()) && $model->save())
-            {
-                return $this->redirect(['index','CmsBannerPicSearch[banner_id]'=>$model->banner_id]);
+            //var_dump($model);die();
+            if ($model->load(Yii::$app->request->post())) {
+                if (count($_POST['CmsBannerPic']['pos']) > 0)
+                {
+                    $model->pos = ','.implode(',', $_POST['CmsBannerPic']['pos']).',';
+                }
+                if($model->save()){
+                    return $this->redirect(['index']);
+                }else{
+                    var_dump($model->getErrors());die();
+                }
             }
         }
         return $this->render('create', [
             'model' => $model,
-            'statusMap' => $statusMap
         ]);
     }
 
@@ -105,29 +105,30 @@ class CmsBannerPicController extends Controller
      */
     public function actionUpdate($id)
     {
-        $site_id = \Yii::$app->params['site_id'];
-        $lang_id = \Yii::$app->params['lang_id'];
         $model = $this->findModel($id);
-        $statusMap = DataHelper::getGeneralStatus();
-        
+        $model->pos = explode(',', substr($model->pos, 1, -1));
+        $model->updated_at=time();
         if (Yii::$app->request->isPost) {
             $model->image_file = UploadedFile::getInstance($model, 'image_file');
-            if (($file = $model->uploadImage($site_id))!=false) {
-                if (strpos($model->image, 'default') === false)
-                {
-                    UtilHelper::DeleteImg($model->image);
-                }
+            if (($file = $model->uploadImage())!=false) {
+                UtilHelper::DeleteImg( $model->image);
                 $model->image = $file['src'];
             }
-            
-            if ($model->load(Yii::$app->request->post()) && $model->save())
-            {
-                return $this->redirect(['index','CmsBannerPicSearch[banner_id]'=>$model->banner_id]);
+            //var_dump($model);die();
+            if ($model->load(Yii::$app->request->post())) {
+                if (count($_POST['CmsBannerPic']['pos']) > 0)
+                {
+                    $model->pos = ','.implode(',', $_POST['CmsBannerPic']['pos']).',';
+                }
+                if($model->save()){
+                    return $this->redirect(['index']);
+                }else{
+                    var_dump($model->getErrors());die();
+                }
             }
         }
         return $this->render('update', [
             'model' => $model,
-            'statusMap' => $statusMap
         ]);
     }
 
@@ -140,11 +141,7 @@ class CmsBannerPicController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        if (strpos($model->image, 'default') === false)
-        {
-            UtilHelper::DeleteImg($model->image);
-        }
-        
+        UtilHelper::DeleteImg($model->image);
         $model->delete();
     }
 

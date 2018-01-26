@@ -3,15 +3,12 @@
 namespace common\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
 use common\helpers\UtilHelper;
 
 /**
  * This is the model class for table "cms_category".
  *
  * @property integer $id
- * @property integer $lang_id
- * @property integer $site_id
  * @property integer $parent_id
  * @property string $name
  * @property string $description
@@ -22,42 +19,30 @@ use common\helpers\UtilHelper;
  * @property string $banner
  * @property integer $sort_val
  * @property integer $status
- * @property integer $necessary
- * @property integer $type
+ * @property string $type
  * @property integer $created_at
  * @property integer $updated_at
  */
 class CmsCategory extends \yii\db\ActiveRecord
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
-    const CATE_NEWS='news';
-    const CATE_LOGIN='login';
-    const CATE_JOIN='join';
-    const CATE_SYSTEM='system';
-    const CATE_QUESTION='question';
-    const CATE_FREECATE='freecate';
-    const CATE_BRAND='brand';
-    public $image_main_file;
-    public $image_node_file;
-    public $banner_file;
-   
+    //栏目状态
+    const STATUS_DISPLAY=10;
+    const STATUS_NONE=0;
+    //栏目类型
+    const TYPE_NEWS=0;//新闻资讯
+    const TYPE_PARK=1;//园区概述
+    const TYPE_OPERATE=2;//物业服务
+    const TYPE_INDEX=3;//首页企业生态圈
+
+	public $image_main_file;
+	public $image_node_file;
+	public $banner_file;
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return 'cms_category';
-    }
-    
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
     }
 
     /**
@@ -66,15 +51,12 @@ class CmsCategory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lang_id', 'name', 'description', 'status'], 'required'],
-            [['lang_id', 'site_id', 'parent_id', 'sort_val', 'status', 'created_at', 'updated_at', 'necessary'], 'integer'],
-            [['name', 'description', 'meta_keywords', 'meta_description', 'image_main', 'image_node','banner'], 'string', 'max' => 255],
+            [['parent_id', 'sort_val', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['name', 'description', 'created_at', 'updated_at'], 'required'],
+            [['name','banner_title','banner_subtitle', 'description', 'meta_keywords', 'meta_description', 'image_main', 'image_node', 'banner'], 'string', 'max' => 255],
             [['type'], 'string', 'max' => 20],
-            [['parent_id', 'necessary'], 'default', 'value'=>0],
-            [['sort_val'], 'default', 'value'=>10],
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
-            [['image_main_file','image_node_file','banner_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024*1024*2],
+        	['parent_id', 'default', 'value' =>0],
+        	['status', 'default', 'value' =>10]
         ];
     }
 
@@ -85,56 +67,72 @@ class CmsCategory extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'lang_id' => Yii::t('app', 'Lang ID'),
-            'site_id' => Yii::t('app', 'Site ID'),
             'parent_id' => Yii::t('app', 'Parent ID'),
             'name' => Yii::t('app', 'Name'),
+            'banner_title' => Yii::t('app', 'Banner Title'),
+            'banner_subtitle' => Yii::t('app', 'Banner Subtitle'),
             'description' => Yii::t('app', 'Description'),
             'meta_keywords' => Yii::t('app', 'Meta Keywords'),
             'meta_description' => Yii::t('app', 'Meta Description'),
             'image_main' => Yii::t('app', 'Image Main'),
             'image_node' => Yii::t('app', 'Image Node'),
-            'image_main_file' => Yii::t('app', 'Image Main'),
-            'image_node_file' => Yii::t('app', 'Image Node'),
-            'banner' => Yii::t('app', 'Top Banner'),
-            'banner_file' => Yii::t('app', 'Top Banner'),
+            'banner' => Yii::t('app', 'Banner'),
             'sort_val' => Yii::t('app', 'Sort Val'),
             'status' => Yii::t('app', 'Status'),
-            'necessary' => Yii::t('app', 'Necessary'),
             'type' => Yii::t('app', 'Type'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-
-    public function getIndexArticles(){
-        return $this->hasMany(CmsArticle::className(), ['category_id' => 'id'])->orderBy('sort_val asc')->limit(8);
+    public function getArticles(){
+        return $this->hasMany(CmsArticle::className(),['category_id'=>'id']);
+    }
+    public function uploadImageMain($dirName='category/images')
+    {
+    	if (empty($this->image_main_file))
+    	{
+    		return false;
+    	}
+    	return UtilHelper::upload($this->image_main_file, $dirName);
     }
     
-    public function uploadImageMain($siteId,$dirName='category/images')
+    public function uploadImageNode($dirName='category/images')
     {
-        if (empty($this->image_main_file))
-        {
-            return false;
-        }
-        return UtilHelper::upload($this->image_main_file,$siteId, $dirName);
+    	if (empty($this->image_node_file))
+    	{
+    		return false;
+    	}
+    	return UtilHelper::upload($this->image_node_file,$dirName);
     }
     
-    public function uploadImageNode($siteId,$dirName='category/images')
+    public function uploadBanner($dirName='category/images')
     {
-        if (empty($this->image_node_file))
-        {
-            return false;
-        }
-        return UtilHelper::upload($this->image_node_file,$siteId, $dirName);
+    	if (empty($this->banner_file))
+    	{
+    		return false;
+    	}
+    	return UtilHelper::upload($this->banner_file, $dirName);
     }
-    
-    public function uploadBanner($siteId,$dirName='category/images')
-    {
-        if (empty($this->banner_file))
-        {
-            return false;
+    public function getArticle(){
+        return $this->hasMany(CmsArticle::className(),['id'=>'categroy_id'])->limit(4);
+    }
+    static public function getCategoryStatus($key=''){
+        $status = [self::STATUS_NONE=>'有效',self::STATUS_DISPLAY=>'无效'];
+        if($key!==''){
+            return $status[$key];
         }
-        return UtilHelper::upload($this->banner_file,$siteId,$dirName);
+        return $status;
+    }
+    static public function getCategoryType($key=''){
+        $types=[
+            self::TYPE_NEWS=>'新闻资讯',
+            self::TYPE_PARK=>'园区概述',
+            self::TYPE_OPERATE=>'物业服务',
+            self::TYPE_INDEX=>'首页企业生态圈'
+        ];
+        if($key!==''){
+            return $types[$key];
+        }
+        return $types;
     }
 }

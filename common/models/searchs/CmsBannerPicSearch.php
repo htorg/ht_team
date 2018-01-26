@@ -8,7 +8,7 @@ use yii\data\ActiveDataProvider;
 use common\models\CmsBannerPic;
 
 /**
- * CmsBannerPicSearch represents the model behind the search form about `common\models\CmsBannerPic`.
+ * CmsBannerPicSearch represents the model behind the search form of `common\models\CmsBannerPic`.
  */
 class CmsBannerPicSearch extends CmsBannerPic
 {
@@ -18,8 +18,8 @@ class CmsBannerPicSearch extends CmsBannerPic
     public function rules()
     {
         return [
-            [['id', 'banner_id', 'status', 'sort_val', 'created_at', 'updated_at'], 'integer'],
-            [['image', 'link'], 'safe'],
+            [['id', 'sort_val', 'created_at', 'updated_at'], 'integer'],
+            [['pos', 'image', 'link'], 'safe'],
         ];
     }
 
@@ -60,14 +60,13 @@ class CmsBannerPicSearch extends CmsBannerPic
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'banner_id' => $this->banner_id,
-            'status' => $this->status,
             'sort_val' => $this->sort_val,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'image', $this->image])
+        $query->andFilterWhere(['like', 'pos', $this->pos])
+            ->andFilterWhere(['like', 'image', $this->image])
             ->andFilterWhere(['like', 'link', $this->link]);
 
         return $dataProvider;

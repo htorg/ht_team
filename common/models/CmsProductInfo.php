@@ -2,36 +2,32 @@
 
 namespace common\models;
 
-use Yii;
-use yii\behaviors\TimestampBehavior;
 use common\helpers\UtilHelper;
+use Yii;
 
 /**
  * This is the model class for table "cms_product_info".
  *
- * @property integer $id
- * @property integer $lang_id
- * @property integer $site_id
- * @property integer $category_id
- * @property string $product_name
- * @property string $product_info
- * @property string $product_cover
- * @property string $product_mask
- * @property string $product_content
- * @property string $product_other 
- * @property integer $status
- * @property integer $recommend
- * @property integer $sort_val
- * @property integer $created_at
- * @property integer $updated_at
+ * @property int $id
+ * @property int $product_id
+ * @property string $main_image
+ * @property string $main_name
+ * @property string $main_description
+ * @property string $address
+ * @property string $property_area
+ * @property string $available_area
+ * @property string $property_properties
+ * @property string $price
+ * @property string $node_image
+ * @property string $node_name
+ * @property string $node_description
+ * @property int $created_at
+ * @property int $updated_at
  */
 class CmsProductInfo extends \yii\db\ActiveRecord
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
-
-    public $product_cover_file;
-    public $product_mask_file;
+    public $upload_main_image;
+    public $upload_node_image;
     /**
      * @inheritdoc
      */
@@ -43,28 +39,15 @@ class CmsProductInfo extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['lang_id', 'site_id', 'category_id', 'product_name', 'product_info', 'product_cover', 'product_content'], 'required'],
-            [['lang_id', 'site_id', 'category_id', 'status', 'recommend', 'sort_val', 'created_at', 'updated_at'], 'integer'],
-            [['product_info', 'product_content','product_other'], 'string'],
-            [['product_name', 'product_cover','product_mask'], 'string', 'max' => 255],
-            [['recommend'], 'default', 'value'=>0],
-            [['sort_val'], 'default', 'value'=>10],
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
-            [['product_cover_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024*1024*2],
+            [['product_id', 'main_image', 'main_name', 'main_description', 'created_at', 'updated_at'], 'required'],
+            [['product_id', 'created_at', 'updated_at'], 'integer'],
+            [['main_description', 'node_description'], 'string'],
+            [['main_image', 'node_image'], 'string', 'max' => 255],
+            [['main_name', 'address', 'property_area', 'property_properties', 'price'], 'string', 'max' => 20],
+            [['available_area', 'node_name'], 'string', 'max' => 50],
         ];
     }
 
@@ -75,41 +58,38 @@ class CmsProductInfo extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'lang_id' => Yii::t('app', 'Lang ID'),
-            'site_id' => Yii::t('app', 'Site ID'),
-            'category_id' => Yii::t('app', 'Category ID'),
-            'product_name' => Yii::t('app', 'Product Name'),
-            'product_info' => Yii::t('app', 'Product Info'),
-            'product_cover' => Yii::t('app', 'Product Cover'),
-            'product_cover_file' => Yii::t('app', 'Product Cover'),
-            'product_content' => Yii::t('app', 'Product Content'),
-        	'product_other' => Yii::t('app', 'Product Other'),
-            'status' => Yii::t('app', 'Status'),
-            'recommend' => Yii::t('app', 'Recommend'),
-            'sort_val' => Yii::t('app', 'Sort Val'),
+            'product_id' => Yii::t('app', 'Product ID'),
+            'main_image' => Yii::t('app', 'Main Image'),
+            'main_name' => Yii::t('app', 'Main Name'),
+            'main_description' => Yii::t('app', 'Main Description'),
+            'address' => Yii::t('app', 'Address'),
+            'property_area' => Yii::t('app', 'Property Area'),
+            'available_area' => Yii::t('app', 'Available Area'),
+            'property_properties' => Yii::t('app', 'Property Properties'),
+            'price' => Yii::t('app', 'Price'),
+            'node_image' => Yii::t('app', 'Node Image'),
+            'node_name' => Yii::t('app', 'Node Name'),
+            'node_description' => Yii::t('app', 'Node Description'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'upload_main_image'=> Yii::t('app', 'Upload Main Image'),
+            'upload_node_image'=> Yii::t('app', 'Upload Node Image'),
         ];
     }
-
-    public function uploadProductCover($site_id,$dirName='product/images')
+    public function uploadMainImage($dirName='product/images')
     {
-        if (empty($this->product_cover_file))
+        if (empty($this->upload_main_image))
         {
             return false;
         }
-        return UtilHelper::upload($this->product_cover_file, $site_id, $dirName);
+        return UtilHelper::upload($this->upload_main_image,$dirName);
     }
-    public function uploadProductMask($site_id,$dirName='product/images')
+    public function uploadNodeImage($dirName='product/images')
     {
-    	if (empty($this->product_mask_file))
-    	{
-    		return false;
-    	}
-    	return UtilHelper::upload($this->product_mask_file, $site_id, $dirName);
-    }
-
-    public function getCategory(){
-        return $this->hasOne(CmsProductCategory::className(), ['id' => 'category_id']);
+        if (empty($this->upload_node_image))
+        {
+            return false;
+        }
+        return UtilHelper::upload($this->upload_node_image,$dirName);
     }
 }

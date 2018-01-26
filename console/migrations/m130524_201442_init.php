@@ -11,7 +11,6 @@ class m130524_201442_init extends Migration
             // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
-
         $this->createTable('{{%user}}', [
             'id' => $this->primaryKey(),
             'username' => $this->string()->notNull()->unique(),
@@ -30,9 +29,6 @@ class m130524_201442_init extends Migration
 
             'auth_key'      => $this->string(32)->notNull(),
             'access_token'  => $this->string(32),
-
-            'type' => $this->integer()->notNull()->defaultValue(0),
-            'level' => $this->integer()->notNull()->defaultValue(0),
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
             'last_login_at' => $this->integer()->notNull()->defaultValue(0),
             'last_login_ip' => $this->string(15),
@@ -40,15 +36,14 @@ class m130524_201442_init extends Migration
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);
-
         $this->createTable('{{%admin_user}}', [
             'id' => $this->primaryKey(),
             'username' => $this->string()->notNull()->unique(),
             'auth_key' => $this->string(32)->notNull(),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
-            'email' => $this->string(),
-            'phone' => $this->string(),
+            'email' => $this->string()->notNull()->unique(),
+
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
@@ -57,6 +52,7 @@ class m130524_201442_init extends Migration
 
     public function down()
     {
-        $this->dropTable('{{%user}}');
+        $this->dropTable('{{user}}');
+        $this->dropTable('{{%admin_user}}');
     }
 }

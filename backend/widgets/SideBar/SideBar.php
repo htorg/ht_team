@@ -1,6 +1,7 @@
 <?php
 namespace backend\widgets\SideBar;
 
+use common\models\CmsCategory;
 use yii\base\Widget;
 use backend\helpers\SiteHelper;
 use yii\web\NotAcceptableHttpException;
@@ -21,12 +22,7 @@ class SideBar extends Widget
 
     public function run()
     {
-        $features = ThemeHelper::getFeatures();
-        
-        $site_info = SiteHelper::getSiteInfo();
-       if(isset($_SESSION['theme'])){
-       		return $this->render('sidebar-new',['features'=>$features,'site_info'=>$site_info]);
-       } 
-        return $this->render('sidebar',['features'=>$features,'site_info'=>$site_info]);
+        $category_type=CmsCategory::getCategoryType();
+        return $this->render('sidebar',['category_type'=>$category_type]);
     }
 }

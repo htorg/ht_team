@@ -3,16 +3,14 @@
 namespace common\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
 use common\helpers\UtilHelper;
 
 /**
  * This is the model class for table "cms_page_contact".
  *
- * @property integer $id
- * @property integer $lang_id
- * @property integer $site_id
- * @property string $name
+ * @property int $id
+ * @property string $meta_keywords
+ * @property string $meta_description
  * @property string $phone
  * @property string $telephone
  * @property string $longitude
@@ -23,39 +21,29 @@ use common\helpers\UtilHelper;
  * @property string $qq
  * @property string $zipcode
  * @property string $wxopenid
+ * @property string $weibo
  * @property string $banner
- * @property string $top_banner_name
- * @property string $top_banner_desc
- * @property integer $status
- * @property integer $sort_val
- * @property integer $created_at
- * @property integer $updated_at
+ * @property string $banner_title
+ * @property string $banner_subtitle
+ * @property string $contact_desc
+ * @property int $created_at
+ * @property int $updated_at
  */
 class CmsPageContact extends \yii\db\ActiveRecord
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    public $upload_banner;
+    public $upload_weixin;
+    public $upload_weibo;
+    public $upload_map;
 
-    public $wxopenid_file;
-    public $banner_file;
-    public $map_img_file;
-    
+    const TYPE_COMPANY=0;
+    const TYPE_PROPERTY=1;
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return 'cms_page_contact';
-    }
-    
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
     }
 
     /**
@@ -64,19 +52,14 @@ class CmsPageContact extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lang_id', 'name', 'phone', 'address'], 'required'],
-            [['lang_id', 'site_id', 'status', 'sort_val', 'created_at', 'updated_at', 'qq', 'zipcode'], 'integer'],
-            [['name', 'phone', 'telephone', 'qq', 'zipcode'], 'string', 'max' => 20],
+            [['phone', 'address', 'created_at', 'updated_at','type'], 'required'],
+            [['created_at', 'updated_at'], 'integer'],
+            [['phone', 'telephone', 'zipcode'], 'string', 'max' => 20],
             [['longitude', 'latitude'], 'string', 'max' => 40],
             [['address'], 'string', 'max' => 200],
+            [['map_img', 'wxopenid', 'meta_keywords', 'meta_description', 'weibo','qq','banner', 'banner_title', 'banner_subtitle'], 'string', 'max' => 255],
             [['email'], 'string', 'max' => 60],
-            [['wxopenid','banner', 'top_banner_name', 'top_banner_desc','map_img'], 'string', 'max' => 255],
-            [['sort_val'], 'default', 'value'=>10],
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
-            [['email'], 'email'],
-            [['phone'],'match','pattern'=>'/^13[\d]{9}$|^14[5,7]{1}\d{8}$|^15[^4]{1}\d{8}$|^17[0,6,7,8]{1}\d{8}$|^18[\d]{9}$|^([0-9]{3,4}-)?[0-9]{7,8}$/'],
-            [['wxopenid_file','banner_file','map_img_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024*1024*2],
+            [['contact_desc'], 'string'],
         ];
     }
 
@@ -87,56 +70,71 @@ class CmsPageContact extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'lang_id' => Yii::t('app', 'Lang ID'),
-            'site_id' => Yii::t('app', 'Site ID'),
-            'name' => Yii::t('app', 'Name'),
+            'meta_keywords' => Yii::t('app', 'Meta Keywords'),
+            'meta_description' => Yii::t('app', 'Meta Description'),
             'phone' => Yii::t('app', 'Phone'),
-			'telephone'  => Yii::t('app', 'Telephone'),
+            'telephone' => Yii::t('app', 'Telephone'),
             'longitude' => Yii::t('app', 'Longitude'),
             'latitude' => Yii::t('app', 'Latitude'),
             'address' => Yii::t('app', 'Address'),
             'map_img' => Yii::t('app', 'Map Img'),
-            'map_img_file' => Yii::t('app', 'Map Img'),
             'email' => Yii::t('app', 'Email'),
             'qq' => Yii::t('app', 'Qq'),
             'zipcode' => Yii::t('app', 'Zipcode'),
             'wxopenid' => Yii::t('app', 'Wxopenid'),
-            'wxopenid_file' => Yii::t('app', 'Wxopenid'),
-            'banner' => Yii::t('app', 'Top Banner'),
-            'banner_file' => Yii::t('app', 'Top Banner'),
-            'top_banner_name' => Yii::t('app', 'Top Banner Name'),
-            'top_banner_desc' => Yii::t('app', 'Top Banner Desc'),
-            'status' => Yii::t('app', 'Status'),
-            'sort_val' => Yii::t('app', 'Sort Val'),
+            'weibo' => Yii::t('app', 'Weibo'),
+            'banner' => Yii::t('app', 'Banner'),
+            'banner_title' => Yii::t('app', 'Banner Title'),
+            'banner_subtitle' => Yii::t('app', 'Banner Subtitle'),
+            'contact_desc'=>Yii::t('app', 'Contact Desc'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'upload_banner'=>Yii::t('app', 'Upload Banner'),
+            'upload_weixin'=>Yii::t('app', 'Upload Weixin'),
+            'upload_weibo'=>Yii::t('app', 'Upload Weibo'),
+            'upload_map'=>Yii::t('app', 'Upload Map'),
         ];
     }
-    
-    public function uploadWxopenid($site_id,$dirName='contact/images')
+    public function uploadBanner($dirName='contact/images')
     {
-        if (empty($this->wxopenid_file))
+        if (empty($this->upload_banner))
         {
             return false;
         }
-        return UtilHelper::upload($this->wxopenid_file, $site_id, $dirName);
+        return UtilHelper::upload($this->upload_banner,$dirName);
     }
-    
-    public function uploadBanner($site_id,$dirName='contact/images')
+    public function uploadWeixin($dirName='contact/images')
     {
-        if (empty($this->banner_file))
+        if (empty($this->upload_weixin))
         {
             return false;
         }
-        return UtilHelper::upload($this->banner_file, $site_id, $dirName);
+        return UtilHelper::upload($this->upload_weixin,$dirName);
     }
-    
-    public function uploadMapImg($site_id,$dirName='contact/images')
+    public function uploadWeibo($dirName='contact/images')
     {
-        if (empty($this->map_img_file))
+        if (empty($this->upload_weibo))
         {
             return false;
         }
-        return UtilHelper::upload($this->map_img_file, $site_id, $dirName);
+        return UtilHelper::upload($this->upload_weibo,$dirName);
+    }
+    public function uploadMap($dirName='contact/images')
+    {
+        if (empty($this->upload_map))
+        {
+            return false;
+        }
+        return UtilHelper::upload($this->upload_map,$dirName);
+    }
+    static public function getContactType($key=''){
+        $types=[
+                self::TYPE_COMPANY=>'联系我们',
+                self::TYPE_PROPERTY=>'物业服务'
+            ];
+        if ($key!==''){
+            return $types[$key];
+        }
+        return $types;
     }
 }

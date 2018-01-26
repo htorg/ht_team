@@ -384,9 +384,9 @@ class UtilHelper
         }
     }
     
-    static public function upload($uploadedFile,$site_id,$dirName,$type='',$tW=120,$tH=120)
+    static public function upload($uploadedFile,$dirName,$type='',$tW=120,$tH=120)
     {
-        $destFilePath = '/uploads/'.$site_id.'/'.$dirName.'/' . date('Ymd') . '/';
+        $destFilePath = '/uploads/'.$dirName.'/' . date('Ymd') . '/';
         $saveFilePath = Yii::getAlias('@webroot') . $destFilePath;
         if (!file_exists($saveFilePath))
         {

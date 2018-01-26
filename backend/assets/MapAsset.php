@@ -15,7 +15,8 @@ use yii\web\AssetBundle;
  */
 class MapAsset extends AssetBundle
 {
-    public $sourcePath = '@backend/assets/dist';
+    public $basePath = '@webroot';
+    public $baseUrl = '@web';
     public $jsOptions = ['position' => \yii\web\View::POS_HEAD, 'charset'=>"UTF-8"];
     public $css = [
     ];

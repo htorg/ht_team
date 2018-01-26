@@ -1,0 +1,258 @@
+@charset "utf-8";
+.mask_layout{
+    position:fixed;
+    width:100%;
+    height:100%;
+    left:0;
+    top:0;
+    z-index: 400;
+    background:rgba(0,0,0,0.5);
+}
+/*************** frame_bx ****************/
+.frame_bx{
+    position:fixed;
+    left:50%;
+    top:50%;
+    width:440px;
+    height:336px;
+    border-radius:16px;
+    background:#fff;
+    margin:-168px 0 0 -220px;
+    text-align:center;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    min-width:320px;
+    z-index: 401;
+}
+.frame_bx .logo_df{
+    width:188px;
+    height:46px;
+}
+.frame_bx .frame_form{
+    width:272px;
+    margin:0 auto;
+}
+.frame_bx .input_bx{
+    height:40px;
+    width:100%;
+    line-height:40px;
+    position:relative;
+    padding-left:37px;
+    padding-right:15px;
+    border-radius:20px;
+    text-align:left;
+    background:#f5f5f5;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow: hidden;
+    margin-bottom:10px;
+}
+.frame_bx .input_bx .ico_account{
+    position:absolute;
+    left:14px;
+    top:50%;
+    margin-top:-7px;
+    display:inline-block;
+    width:12px;
+    height:14px;
+    background:url(../img/ico_account.png) center top;
+
+}
+.frame_bx .input_bx .writeIn{
+    background:transparent;
+    height:30px;
+    width:100%;
+    display:block;
+    padding-top:6px;
+}
+.frame_bx .input_bx .ico_password{
+    position:absolute;
+    left:14px;
+    top:50%;
+    margin-top:-7px;
+    display:inline-block;
+    width:12px;
+    height:14px;
+    background:url(../img/ico_password.png) center top;
+}
+.frame_bx .input_bx .ico_number{
+    position:absolute;
+    left:14px;
+    top:50%;
+    margin-top:-7px;
+    display:inline-block;
+    width:14px;
+    height:14px;
+    background:url(../img/ico_number.png) center top;
+}
+.frame_bx .input_bx .ico_code{
+    position:absolute;
+    left:14px;
+    top:50%;
+    margin-top:-7px;
+    display:inline-block;
+    width:12px;
+    height:14px;
+    background:url(../img/ico_password.png) center top;
+}
+.frame_bx .input_bx::-webkit-input-placeholder {
+    font-size:14px;
+    color: #808080;
+}
+.frame_bx .input_bx:-moz-placeholder {
+    font-size:14px;
+    color: #808080;
+}
+.frame_bx .input_bx::-moz-placeholder{
+    font-size:14px;
+    color: #808080;
+}
+.frame_bx .input_bx:-ms-input-placeholder{
+    font-size:14px;
+    color: #808080;
+}
+
+.frame_bx .btn_row{
+    margin-bottom:20px;
+    text-align:right;
+    font-size:12px;
+    color:#808080;
+    padding:0 3px;
+}
+.frame_bx .btn_row .btn_df{
+    display:inline-block;
+    font-size:12px;
+    color:#808080;
+    padding:0 4px;
+}
+.frame_bx .frame_btn{
+    display:block;
+    width:100%;
+    height:40px;
+    border-radius:20px;
+    background:#fbaa1c;
+    font-size:16px;
+    color:#fff;
+    line-height:40px;
+    text-align:center;
+}
+.frame_bx .delete_df{
+    position:absolute;
+    right:10px;
+    top:14px;
+    height:24px;
+    width:24px;
+    font-size:20px;
+    text-align:center;
+    background:url(../img/delete.png) no-repeat center;
+}
+
+/*frame_signIn*/
+.frame_signIn .logo_df{
+    margin: 44px 0 24px;
+}
+/*frame_register_message*/
+.frame_register_message .logo_df{
+    margin: 44px 0 20px;
+}
+.frame_register_message .verify_code{
+    padding-right:144px;
+    position:relative;
+    padding-bottom:2px;
+
+}
+.frame_register_message .verify_code .getVerify_btn{
+    display:block;
+    width:134px;
+    position:absolute;
+    right:0;
+    top:0;
+    height:38px;
+    line-height:38px;
+    text-align:center;
+    border:solid 1px #fbaa1c;
+    border-radius:20px;
+    color:#808080;
+}
+.frame_register_message .check_bx{
+    margin-bottom:20px;
+    height:12px;
+    line-height:12px;
+}
+#sigIn_protocol{
+    display:none;
+}
+#sigIn_protocol:checked~.sigIn_protocol_label{
+    background:gray;
+}
+.frame_register_message .sigIn_protocol_label{
+    vertical-align: middle;
+    display:inline-block;
+    width:11px;
+    height:11px;
+    background:url(../img/ico_checkOff.png) left top;
+}
+.frame_register_message .check_bx .words_df{
+    font-size:12px;
+    color:#808080;
+}
+.frame_register_message .check_bx .words_df .btn_df{
+    font-size:12px;
+    color:#808080;
+}
+/*frame_register_account*/
+.frame_register_account .logo_df{
+    margin: 30px 0 26px;
+}
+.frame_register_account .again_input{
+    margin-bottom:20px;
+}
+/*.frame_forget*/
+.frame_forget .logo_df{
+    margin:46px 0 36px;
+}
+.frame_forget .verify_code{
+    padding-right:144px;
+    position:relative;
+    padding-bottom:2px;
+    margin-bottom:10px;
+}
+.frame_forget .verify_code .getVerify_btn{
+    display:block;
+    width:134px;
+    position:absolute;
+    right:0;
+    top:0;
+    height:38px;
+    line-height:38px;
+    text-align:center;
+    border:solid 1px #fbaa1c;
+    border-radius:20px;
+    color:#808080;
+}
+/*.frame_repair*/
+.frame_repair .logo_df{
+    margin:26px 0 24px;
+}
+.frame_repair .again_input{
+    margin-bottom:20px;
+}
+/*frame_reset*/
+.frame_reset .logo_df{
+    margin:46px 0 36px;
+}
+.frame_reset .again_input{
+    margin-bottom:20px;
+}
+/*frame_bindPhone*/
+.frame_bindPhone .logo_df{
+    margin:26px 0 24px;
+}
+.frame_bindPhone .margin_B20{
+    margin-bottom:20px;
+}
+@media screen and (max-width:450px){
+    .frame_bx{width:90%;left:5%;margin-left:0;}
+}

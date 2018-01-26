@@ -10,7 +10,7 @@ use yii\helpers\Url;
     ]
 ]); ?>
     <!--frame_register_message-->
-    <div class="frame_register_message  frame_bx "  style="display:none;" >
+    <div class="frame_register_message  frame_bx "   >
         <i class="iconfont delete_df btn_df noneSelect">&#xe625;</i>
         <img class="logo_df" src="<?= $url; ?>/img/frame_logo.png">
             <div class="input_bx">
