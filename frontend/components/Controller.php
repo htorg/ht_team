@@ -59,7 +59,6 @@ class Controller extends \yii\web\Controller {
 			if (!ThemeHelper::setThemeByCode($themeCode) ){
 					return false;
 			}
-			
 			$this->mainDatas=CacheHelper::getArrayList('siteinfo2'.$this->siteCore->getSiteInfo()['cmsSite']['site_id'], $this->siteCore->getSiteInfo());
 			//var_dump($this->mainDatas);
 			return true;
