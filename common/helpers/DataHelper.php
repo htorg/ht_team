@@ -87,4 +87,10 @@ Class DataHelper{
 	static public function getImgSrc($pic){
             return \Yii::getAlias('@upload').$pic;
     }
+    static public function getUserAvatar($pic){
+	    if (empty($pic)){
+	        return \Yii::getAlias('@web').'/img/ico_user.png';
+        }
+        return \Yii::getAlias('@upload').$pic;
+    }
 }

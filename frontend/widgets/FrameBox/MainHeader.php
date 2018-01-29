@@ -1,9 +1,8 @@
 <?php
 namespace frontend\widgets\FrameBox;
 
-use frontend\models\LoginForm;
 use yii\base\Widget;
-class Login extends Widget{
+class MainHeader extends Widget{
 	public function init()
 	{
 		parent::init();
@@ -11,8 +10,11 @@ class Login extends Widget{
 		$this->registerAsset();
 	}
 	public function run(){
-	    $model =  New LoginForm();
-		return $this->render('login',['model'=>$model]);
+	    $pic='';
+	    if (!\Yii::$app->user->isGuest){
+	        $pic = \Yii::$app->user->getIdentity()->avatar;
+        }
+		return $this->render('main-header',['pic'=>$pic]);
 	}
 	public function registerAsset() {
 		$view = $this->getView();

@@ -20,14 +20,27 @@ $bundle=\frontend\assets\OtherAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <style>
+        .help-block{
+            font-size: 14px;
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <?php $this->beginBody() ?>
+<div class="center-frame">
+    <div class="flex-frame">
+        <?= \frontend\widgets\FrameBox\MainHeader::widget();?>
+    </div>
+</div>
 
-<?= \frontend\widgets\FrameBox\Login::widget(['url'=>$bundle->baseUrl]);?>
+<?= \frontend\widgets\FrameBox\Login::widget();?>
 
-<?= \frontend\widgets\FrameBox\Register::widget(['url'=>$bundle->baseUrl]);?>
+<?= \frontend\widgets\FrameBox\Register::widget();?>
 
+<?= \frontend\widgets\FrameBox\Reset::widget();?>
+<div class="mask_layout" style="display:none"></div>
 <?php $this->endBody() ?>
 </body>
 </html>

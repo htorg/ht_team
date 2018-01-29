@@ -1,9 +1,9 @@
 <?php
 namespace frontend\widgets\FrameBox;
 
-use frontend\models\LoginForm;
+use frontend\models\SetPasswordForm;
 use yii\base\Widget;
-class Login extends Widget{
+class Reset extends Widget{
 	public function init()
 	{
 		parent::init();
@@ -11,8 +11,8 @@ class Login extends Widget{
 		$this->registerAsset();
 	}
 	public function run(){
-	    $model =  New LoginForm();
-		return $this->render('login',['model'=>$model]);
+	    $model =  New SetPasswordForm();
+        return $this->render('reset',['model'=>$model]);
 	}
 	public function registerAsset() {
 		$view = $this->getView();

@@ -11,6 +11,8 @@ class SignupForm extends Model
 {
     public $username;
     public $password;
+    public $nickname;
+    public $verifyPassword;
 
 
     /**
@@ -20,14 +22,14 @@ class SignupForm extends Model
     {
         return [
             ['username', 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            ['username', 'required','message' => '手机号码不能为空'],
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => '手机号码已存在'],
+            [['username'],'match','pattern'=>'/^1[0-9]{10}$/','message'=>'手机格式不正确!'],
+            ['password', 'required','message' => '密码不能为空'],
+            ['password', 'string', 'min' => 6,'message' => '密码不能少于6位'],
+            ['verifyPassword', 'compare', 'compareAttribute'=>'password', 'message'=>'两次密码不一致'],
         ];
     }
-
     /**
      * Signs user up.
      *
@@ -38,12 +40,13 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
         $user = new User();
         $user->username = $this->username;
         $user->setPassword($this->password);
         $user->generateAuthKey();
-        
+        $user->generateAccessToken();
+        $user->nickname = $this->nickname;
+
         return $user->save() ? $user : null;
     }
 }

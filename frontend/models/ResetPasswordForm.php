@@ -12,6 +12,7 @@ class ResetPasswordForm extends Model
 {
     public $password;
 
+
     /**
      * @var \common\models\User
      */
@@ -43,7 +44,6 @@ class ResetPasswordForm extends Model
     public function rules()
     {
         return [
-            ['password', 'required'],
             ['password', 'string', 'min' => 6],
         ];
     }

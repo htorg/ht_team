@@ -1,10 +1,10 @@
 <?php
 namespace frontend\widgets\FrameBox;
 
+use frontend\models\SetPasswordForm;
 use frontend\models\SignupForm;
 use yii\base\Widget;
 class Register extends Widget{
-    public $url;
 	public function init()
 	{
 		parent::init();
@@ -13,7 +13,7 @@ class Register extends Widget{
 	}
 	public function run(){
 	    $model =  New SignupForm();
-		return $this->render('register',['model'=>$model,'url'=>$this->url]);
+        return $this->render('register',['model'=>$model]);
 	}
 	public function registerAsset() {
 		$view = $this->getView();

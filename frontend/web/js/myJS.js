@@ -3,89 +3,37 @@
  */
 //menu click
 $(window).ready(function(){
-    $('#menu_btn').click(function(){
-        $('.flex-frame').toggleClass("page_close");
-        $('.mb_nav_page').toggleClass("mbNav_open");
-        $('.mask_layout ').fadeToggle('fast');
-        navMask();
-    });
-    $('.subNav_list ').find('.item_title').click(function(){
-        $(this).next('.ph_subNav_subBar ').slideToggle();
-    });
 
+    // center-frame
+    var winH = $(window).height();
+    $(".center-frame").css('minHeight',winH);
+    //flex
+    function flex(){
+        var domFlex = document.getElementsByClassName("flex-frame")[0];
 
-    function navMask(){
-        console.log('a')
-        if($('.mb_nav_page').hasClass('mbNav_open')){
-            unScroll();
-        }
-        else{
-            removeUnScroll();
-        }
-    }
-    function unScroll() {
-        var top = $(document).scrollTop();
-        $(document).on('scroll.unable',function (e) {
-            $(document).scrollTop(top);
-        })
-    }
+        var bodyWidth = document.documentElement.clientWidth;
+        var scaleValue = bodyWidth/1920;
+        if(scaleValue < 1){
+            domFlex.style.webkitTransform = "scale("+scaleValue+")" ;
+            domFlex.style.msTransform = "scale("+scaleValue+")";
+            domFlex.style.transform = "scale("+scaleValue+")";
 
-    function removeUnScroll() {
-        $(document).unbind("scroll.unable");
-    }
+            var valueHeight =  domFlex.clientHeight  * scaleValue ;
+            var valueWidth =   domFlex.clientWidth  * scaleValue ;
 
-    //
-    $('.garden_bar').find('.item_df').click(function(){
-        var varIndex = $(this).parent('li').index();
-        var varHeight = $('.garden_ctt li').eq(varIndex).offset().top - 90;
-        $('html').animate({scrollTop:varHeight},'slow');
-    })
-
-    //process tab
-    $('.do_guide').find('.tab_df').click(function(){
-        if(!$(this).hasClass('tab_on')){
-            $(this).siblings('.tab_on').removeClass('tab_on');
-            $(this).addClass('tab_on');
-            var tabIndex = $(this).index();
-            console.log(tabIndex)
-            var oNotice = $('.do_guide').find('.notice_box');
-            var odown = $('.do_guide').find('.down_box');
-            switch(tabIndex){
-                case 0:
-                    oNotice.show();
-                    odown.hide();
-                    break;
-                case 1:
-                    odown.show();
-                    oNotice.hide();
-                    break;
-                default:
-                    break;
-            }
-        }
-    });
-
-    //vertical-align
-
-    function objectMiddle(){
-        if($(window).width() >= 768){
-            var tagDes = $('.national_level  .des_df');
-            var tagVer = tagDes.siblings('i');
-            var tagVerH = tagDes.innerHeight();
-            tagVer.height(tagVerH);
-
-
-            var tagPro = $('.provincial_level');
-            var tagProImg = $('.provincial_level .img_df');
-            var tagProH = tagPro.height();
-            var tagProImgH = tagProImg.height();
-
-            tagProImg.css({'marginTop': Math.abs(tagProH - tagProImgH)/2})
+            // var oHtml = $("html");
+            // var oBody = $("body");
+            // oHtml.height(valueHeight);
+            // oBody.height(valueHeight);
+            // oHtml.width(valueWidth);
+            // oBody.width(valueWidth);
         }
 
     }
-    objectMiddle();
+
+    flex();
+
     $(window).resize(function(){
-        objectMiddle();
-    })
+        flex();
+    });
 });

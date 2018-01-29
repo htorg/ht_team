@@ -50,7 +50,19 @@ class UtilHelper
             . substr($charid, 20, 12);
         return $uuid;
     }
-    
+    static public function getSendCode()
+    {
+        $str = "1,2,3,4,5,6,7,8,9";
+        $list = explode(",", $str);
+        $cmax = count($list) - 1;
+        $verifyCode = '';
+        for ( $i=0; $i < 6; $i++ ){
+            $randnum = mt_rand(0, $cmax);
+            $verifyCode .= $list[$randnum];
+        }
+
+        return $verifyCode;
+    }
     static public function getUniqueId()
     {
         $yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
@@ -480,5 +492,25 @@ class UtilHelper
     	$str = md5($str);
     
     	return $str;
+    }
+
+    static public function checkVerify($name,$code){
+        $cache = Yii::$app->cache;
+        if (!$cache->exists($name))
+        {
+            $rt = ['c'=>-2,'msg'=>'验证码已过期'];
+            return $rt;
+        }
+        else
+        {
+            if ($code != $cache->get($name) )
+            {
+                $rt = ['c'=>-3,'msg'=>'验证码错误'];
+                return $rt;
+            }else{
+                $rt = ['c'=>0,'msg'=>'验证成功'];
+                return $rt;
+            }
+        }
     }
 } 

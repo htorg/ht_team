@@ -20,7 +20,8 @@ class AppAsset extends AssetBundle
         'js/jquery.bxslider.js',
         'js/bxDefault.js',
         'js/myJS.js',
-        'js/chose.js'
+        'js/chose.js',
+        'js/frame.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

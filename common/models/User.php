@@ -14,8 +14,15 @@ use yii\web\IdentityInterface;
  * @property string $username
  * @property string $password_hash
  * @property string $password_reset_token
- * @property string $email
+
+ * @property string $nickname
+ * @property string $ext_type
+ * @property string $ext_id
+ * @property string $avatar
+ * @property string $avatar_key
+
  * @property string $auth_key
+ * @property string $access_token
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
@@ -26,14 +33,13 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
-    public $newpwd1;
-    public $newpwd2;
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%admin_user}}';
+        return '{{%user}}';
     }
 
     /**
@@ -70,7 +76,8 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        //throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne(['access_token' => $token]);
     }
 
     /**
@@ -187,15 +194,19 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    public function generateAccessToken()
+    {
+        $this->access_token = Yii::$app->security->generateRandomString();
+    }
     public static function findByPhone($phone)
     {
-        return static::findOne(['phone' => $phone, 'status' => self::STATUS_ACTIVE]);
+    	return static::findOne(['username' => $phone, 'status' => self::STATUS_ACTIVE]);
     }
-    public function resetPassword($usename,$password){
-        $user=$this->findByUsername($usename);
-        $user->setPassword($password);
-        $user->removePasswordResetToken();
-
-        return $user->save() ? $user : null;
+    public function resetPassword($phone,$password){
+    	$user=$this->findByPhone($phone);
+    	$user->setPassword($password);
+    	$user->removePasswordResetToken();   	 
+    	return $user->save() ? $user : null;
     }
 }
