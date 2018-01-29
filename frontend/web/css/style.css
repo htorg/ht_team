@@ -293,6 +293,7 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     cursor:pointer;
+	
 }
 .center_header .center_nav .nav_bx .nav_item a{
     display:block;
@@ -300,6 +301,10 @@
     height:100%;
 }
 .center_header .center_nav .nav_bx .nav_on a{
+    color:#fbaa1c;
+    border-bottom:solid 1px #fbaa1c;
+}
+.center_header .center_nav .nav_bx .nav_on{
     color:#fbaa1c;
     border-bottom:solid 1px #fbaa1c;
 }
