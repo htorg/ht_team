@@ -51,7 +51,7 @@ $bundle=\frontend\assets\AppAsset::register($this);
                 <p class="crumb_row"><a class="crumb_df btn_df">个人中心</a> > <a class="crumb_df btn_df">我的信息</a></p>
                 <div class="center_content clearfix">
                     <div class="ct_lt">
-                        <i class="user_basic"><img class="case_portrait" src="img/portrait.jpg"><span class="userName">小萝卜</span></i>
+                        <?= \frontend\widgets\FrameBox\AuthBar::widget();?>
                         <ul class="sideNav">
                             <li class="item_df nav_on" data-id="center"><span >我的信息</span></li>
                             <li class="item_df" data-id="login"><span >登陆安全</span></li>
@@ -92,7 +92,6 @@ $bundle=\frontend\assets\AppAsset::register($this);
                 case "#trade": pathn = "<?= Url::to(['auth/trade'])?>"; i = 3; break;
                 default: pathn = "<?= Url::to(['auth/info'])?>"; i = 0; break;
             }
-            console.log(pathn);
             $(".ct_rt").load(pathn); //加载相对应的内容
             $(".con_1444 li").eq(i).addClass("nav_on").siblings().removeClass("nav_on"); //当前列表高亮
             $(".center_nav li").eq(i).addClass("nav_on").siblings().removeClass("nav_on"); //当前列表高亮

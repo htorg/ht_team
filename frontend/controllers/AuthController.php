@@ -16,6 +16,7 @@ use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use yii\data\Pagination;
 use common\models\User;
+use yii\web\UploadedFile;
 
 
 class AuthController extends Controller
@@ -28,7 +29,7 @@ class AuthController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'only' => ['logout', 'signup','center','info','login-sec','address','trade'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -36,7 +37,7 @@ class AuthController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout','center','info','login-sec','address','trade'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -80,7 +81,7 @@ class AuthController extends Controller
             $rt=['c'=>0,'msg'=>'登录成功'];
             return json_encode($rt);
         } else {
-           $rt=['c'=>-1,'msg'=>'用户名或者密码错误'];
+            $rt=['c'=>-1,'msg'=>'用户名或者密码错误'];
             return json_encode($rt);
         }
     }
@@ -229,13 +230,46 @@ class AuthController extends Controller
         }
         return json_encode($rt);
     }
+
+    public function actionDetail(){
+        $user = Yii::$app->user->getIdentity();
+        $avatar = UploadedFile::getInstanceByName('avatar');
+        $dirName='avatar';
+        if (!empty($avatar))
+        {
+            $file = UtilHelper::upload($avatar, $dirName);
+            $user->avatar = $file['src'];
+        }
+        $month = '1';
+        $day = '1';
+        if (!empty($_POST['year'])){
+            if (!empty($_POST['month'])){
+                $month = $_POST['month'];
+            }
+            if (!empty($_POST['day'])){
+                $day = $_POST['day'];
+            }
+            $user->birthday = $_POST['year'].'-'.$month.'-'.$day;
+        }
+        $user->nickname = $_POST['User']['nickname'];
+        $user->fullname = $_POST['User']['fullname'];
+        $user->sex = $_POST['User']['sex'];
+        if ($user->save()){
+            return $this->goBack();
+        }
+    }
+
     public function actionCenter(){
         $this->layout = 'center';
-        return $this->render('center\index');
+        $user = Yii::$app->user->getIdentity();
+        $birthday =  explode('-',$user->birthday);
+        return $this->render('center\index',['model'=>$user,'birthday'=>$birthday]);
     }
     public function actionInfo(){
         $this->layout = false;
-        return $this->render('center\index');
+        $user = Yii::$app->user->getIdentity();
+        $birthday =  explode('-',$user->birthday);
+        return $this->render('center\index',['model'=>$user,'birthday'=>$birthday]);
     }
     public function actionLoginSec(){
         $this->layout = false;

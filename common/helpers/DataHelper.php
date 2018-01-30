@@ -91,6 +91,6 @@ Class DataHelper{
 	    if (empty($pic)){
 	        return \Yii::getAlias('@web').'/img/ico_user.png';
         }
-        return \Yii::getAlias('@upload').$pic;
+        return \Yii::getAlias('@web').$pic;
     }
 }

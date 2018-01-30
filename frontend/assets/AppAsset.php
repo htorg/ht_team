@@ -16,7 +16,6 @@ class AppAsset extends AssetBundle
         'css/style.css',
     ];
     public $js = [
-        'js/jquery.min.js',
         'js/jquery.bxslider.js',
         'js/bxDefault.js',
         'js/myJS.js',
